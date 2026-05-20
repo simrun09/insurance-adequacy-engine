@@ -1,6 +1,6 @@
 # Insurance Adequacy Engine
 
-A budget-constrained, existing-policy-aware insurance protection planning engine for the Indian market.
+A budget-constrained, existing-policy-aware insurance protection planning engine.
 
 Built with spec-driven development. Uses FastAPI for the backend, Streamlit for the dashboard, and an LLM layer for personalized explanation with graceful fallback to templates.
 
@@ -24,4 +24,4 @@ This project builds a self-serve adequacy engine grounded in standard actuarial 
 
 ## Disclaimer
 
-Insurance Adequacy Engine is an educational tool. It is not insurance or financial advice. Consult a licensed advisor or certified financial planner before making policy decisions.
+Insurance Adequacy Engine is an educational tool. It is not insurance or financial advice.

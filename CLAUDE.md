@@ -1,7 +1,7 @@
 # CLAUDE.md — Project Context for Claude Code
 
 ## Project
-Insurance Adequacy Engine — a budget-constrained, existing-policy-aware insurance protection planning engine for the Indian market. Rule-based actuarial logic (HLV, NBA) with LLM-generated explanations and template fallback.
+Insurance Adequacy Engine — a budget-constrained, existing-policy-aware insurance protection planning engine. Rule-based actuarial logic (HLV, NBA) with LLM-generated explanations and template fallback.
 
 ## Tech Stack
 - Python 3.11+
