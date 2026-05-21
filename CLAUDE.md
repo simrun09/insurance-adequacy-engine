@@ -63,7 +63,7 @@ insurance-adequacy-engine/
 ## Current State
 - [x] Day 1: Project setup, git, CLAUDE.md, initial spec
 - [x] Day 2: Pydantic schemas (input/output models)
-- [ ] Day 3: Adequacy engine (HLV, NBA, health, accident, disability)
+- [x] Day 3: Adequacy engine (HLV, NBA, health, accident, disability)
 - [ ] Day 4: Policy audit + budget-constrained prioritizer
 - [ ] Day 5: LLM layer + graceful degradation
 - [ ] Day 6: FastAPI endpoints

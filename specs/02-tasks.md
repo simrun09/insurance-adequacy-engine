@@ -28,16 +28,16 @@ tests pass, code is committed and pushed.
 
 ## Day 3 — Adequacy Engine
 
-- [ ] T3.1: Implement src/engine/config.py with all constants and source citations
-- [ ] T3.2: Implement compute_hlv() in src/engine/adequacy.py
-- [ ] T3.3: Implement compute_nba() in src/engine/adequacy.py
-- [ ] T3.4: Implement recommend_life_cover() that returns max(HLV, NBA)
-- [ ] T3.5: Implement compute_health_cover_need() with city-tier logic
-- [ ] T3.6: Implement compute_accident_disability_need()
-- [ ] T3.7: Implement src/engine/tax.py with adjust_for_regime()
-- [ ] T3.8: Write tests/test_adequacy.py for every scorer
-- [ ] T3.9: Write tests/test_tax.py
-- [ ] T3.10: Commit and push
+- [x] T3.1: Implement src/engine/config.py with all constants and source citations
+- [x] T3.2: Implement compute_hlv() in src/engine/adequacy.py
+- [x] T3.3: Implement compute_nba() in src/engine/adequacy.py
+- [x] T3.4: Implement recommend_life_cover() that returns max(HLV, NBA)
+- [x] T3.5: Implement compute_health_cover_need() with city-tier logic
+- [x] T3.6: Implement compute_accident_disability_need()
+- [x] T3.7: Implement src/engine/tax.py with adjust_for_regime()
+- [x] T3.8: Write tests/test_adequacy.py for every scorer
+- [x] T3.9: Write tests/test_tax.py
+- [x] T3.10: Commit and push
 
 Done when: every functional requirement in spec sections FR-2 through
 FR-5 has a corresponding tested function.
