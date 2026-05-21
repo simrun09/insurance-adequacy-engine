@@ -17,8 +17,8 @@ and is sized to fit within a single 1-hour daily working session.
 - [x] T2.2: Create project directory structure (DONE in Block 1)
 - [x] T2.3: Write specs/02-plan.md (IN PROGRESS)
 - [x] T2.4: Write specs/02-tasks.md (IN PROGRESS)
-- [ ] T2.5: Implement src/engine/schemas.py — all input and output Pydantic models
-- [ ] T2.6: Write tests/test_schemas.py — validation behavior tests
+- [x] T2.5: Implement src/engine/schemas.py — all input and output Pydantic models
+- [x] T2.6: Write tests/test_schemas.py — validation behavior tests
 - [ ] T2.7: Commit and push
 
 Done when: schemas.py defines every Pydantic model named in the plan,
