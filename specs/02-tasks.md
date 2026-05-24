@@ -62,14 +62,14 @@ Done when: FR-6 and FR-7 are fully implemented and tested.
 
 ## Day 5 — LLM Layer and Graceful Fallback
 
-- [ ] T5.1: Create .env.example with required keys listed
-- [ ] T5.2: Set up secrets loading via python-dotenv
-- [ ] T5.3: Implement src/engine/llm.py with generate_explanation()
-- [ ] T5.4: Implement template fallback function
-- [ ] T5.5: Implement try/except wrapper that selects path
-- [ ] T5.6: Write tests/test_llm.py with mocked Anthropic client
-- [ ] T5.7: Verify the system works fully with no API key (fallback path)
-- [ ] T5.8: Commit and push
+- [x] T5.1: Create .env.example with required keys listed
+- [x] T5.2: Set up secrets loading via python-dotenv
+- [x] T5.3: Implement src/engine/llm.py with generate_explanation()
+- [x] T5.4: Implement template fallback function
+- [x] T5.5: Implement try/except wrapper that selects path
+- [x] T5.6: Write tests/test_llm.py with mocked Anthropic client
+- [x] T5.7: Verify the system works fully with no API key (fallback path)
+- [x] T5.8: Commit and push
 
 Done when: FR-8 is implemented with both LLM and template paths working.
 
