@@ -46,15 +46,15 @@ FR-5 has a corresponding tested function.
 
 ## Day 4 — Policy Audit and Prioritizer
 
-- [ ] T4.1: Implement src/engine/audit.py — IRR computation for endowment/ULIP
-- [ ] T4.2: Implement opportunity cost calculation (term + index fund alternative)
-- [ ] T4.3: Implement audit verdict logic (efficient/mixed/inefficient)
-- [ ] T4.4: Implement src/engine/prioritizer.py with default priority logic
-- [ ] T4.5: Implement priority overrides (no-health-cover, no-dependents)
-- [ ] T4.6: Implement budget-constrained sequence builder
-- [ ] T4.7: Write tests/test_audit.py
-- [ ] T4.8: Write tests/test_prioritizer.py
-- [ ] T4.9: Commit and push
+- [x] T4.1: Implement src/engine/audit.py — IRR computation for endowment/ULIP
+- [x] T4.2: Implement opportunity cost calculation (term + index fund alternative)
+- [x] T4.3: Implement audit verdict logic (efficient/mixed/inefficient)
+- [x] T4.4: Implement src/engine/prioritizer.py with default priority logic
+- [x] T4.5: Implement priority overrides (no-health-cover, no-dependents)
+- [x] T4.6: Implement budget-constrained sequence builder
+- [x] T4.7: Write tests/test_audit.py
+- [x] T4.8: Write tests/test_prioritizer.py
+- [x] T4.9: Commit and push
 
 Done when: FR-6 and FR-7 are fully implemented and tested.
 
