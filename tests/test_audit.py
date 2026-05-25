@@ -20,6 +20,7 @@ from engine.schemas import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def base_life_need():
     return LifeCoverNeed(
@@ -75,6 +76,7 @@ def _profile_with(*policies: ExistingPolicy) -> UserProfile:
 # compute_irr — basic correctness
 # ---------------------------------------------------------------------------
 
+
 # Maturity value derived from annuity PV formula at exactly 5% so NPV(5%) ≈ 0.
 # pv_premiums(5%) = 50000 × 12.4622 = 623,110 → maturity = 623,110 × 1.05^20 = 1,653,298
 def test_irr_known_value_5_percent():
@@ -127,6 +129,7 @@ def test_irr_higher_maturity_produces_higher_irr():
 # compute_opportunity_cost
 # ---------------------------------------------------------------------------
 
+
 # Inefficient policy (IRR ≈ 4%) vs 11% index fund — opportunity cost must be positive
 def test_opportunity_cost_positive_for_inefficient_policy():
     irr = compute_irr(50_000, 20, 9_00_000)
@@ -146,9 +149,12 @@ def test_opportunity_cost_zero_when_years_is_zero():
 
 # Annual premium at or below term estimate → investable ≤ 0 → nothing to compare
 def test_opportunity_cost_zero_when_premium_not_above_term_estimate():
-    assert compute_opportunity_cost(
-        config.TERM_PREMIUM_ANNUAL_ESTIMATE, 10, policy_irr=0.05
-    ) == 0.0
+    assert (
+        compute_opportunity_cost(
+            config.TERM_PREMIUM_ANNUAL_ESTIMATE, 10, policy_irr=0.05
+        )
+        == 0.0
+    )
 
 
 # Higher policy IRR → lower opportunity cost (monotonicity)
@@ -162,6 +168,7 @@ def test_opportunity_cost_decreases_as_policy_irr_increases():
 # ---------------------------------------------------------------------------
 # audit_all_policies — term policy (no IRR fields expected)
 # ---------------------------------------------------------------------------
+
 
 def test_term_policy_has_no_irr_or_efficiency_fields(
     base_life_need, base_health_need, base_ad_need
@@ -187,9 +194,12 @@ def test_term_policy_adequate_when_sum_assured_meets_recommendation(
 ):
     cover = 2_00_00_000
     life_need = LifeCoverNeed(
-        hlv_based_cover=cover, nba_based_cover=1_50_00_000,
-        recommended_cover=cover, existing_cover=cover,
-        gap=0, heuristic_10x_cover=1_80_00_000,
+        hlv_based_cover=cover,
+        nba_based_cover=1_50_00_000,
+        recommended_cover=cover,
+        existing_cover=cover,
+        gap=0,
+        heuristic_10x_cover=1_80_00_000,
     )
     profile = _profile_with(
         ExistingPolicy(
@@ -209,9 +219,12 @@ def test_term_policy_inadequate_when_sum_assured_below_recommendation(
     base_health_need, base_ad_need
 ):
     life_need = LifeCoverNeed(
-        hlv_based_cover=2_00_00_000, nba_based_cover=1_50_00_000,
-        recommended_cover=2_00_00_000, existing_cover=50_00_000,
-        gap=1_50_00_000, heuristic_10x_cover=1_80_00_000,
+        hlv_based_cover=2_00_00_000,
+        nba_based_cover=1_50_00_000,
+        recommended_cover=2_00_00_000,
+        existing_cover=50_00_000,
+        gap=1_50_00_000,
+        heuristic_10x_cover=1_80_00_000,
     )
     profile = _profile_with(
         ExistingPolicy(
@@ -230,6 +243,7 @@ def test_term_policy_inadequate_when_sum_assured_below_recommendation(
 # audit_all_policies — endowment / ULIP verdict
 # ---------------------------------------------------------------------------
 
+
 # Endowment: ₹50,000/yr · 30yr (2010→2040) · maturity ₹33.2L → IRR ≈ 5% → INEFFICIENT
 def test_inefficient_endowment_gets_inefficient_flag(
     base_life_need, base_health_need, base_ad_need
@@ -241,7 +255,7 @@ def test_inefficient_endowment_gets_inefficient_flag(
             annual_premium=50_000,
             start_year=2010,
             maturity_year=2040,
-            maturity_value=33_20_000,   # implied IRR ≈ 5% < 7%
+            maturity_value=33_20_000,  # implied IRR ≈ 5% < 7%
         )
     )
     audits = audit_all_policies(profile, base_life_need, base_health_need, base_ad_need)
@@ -260,7 +274,7 @@ def test_efficient_endowment_gets_efficient_flag(
             annual_premium=50_000,
             start_year=2010,
             maturity_year=2040,
-            maturity_value=82_24_701,   # implied IRR ≈ 10% >= 9%
+            maturity_value=82_24_701,  # implied IRR ≈ 10% >= 9%
         )
     )
     audits = audit_all_policies(profile, base_life_need, base_health_need, base_ad_need)
@@ -316,16 +330,20 @@ def test_ulip_with_low_irr_gets_inefficient_flag(
             annual_premium=60_000,
             start_year=2012,
             maturity_year=2040,
-            maturity_value=40_00_000,   # IRR will be < 7%
+            maturity_value=40_00_000,  # IRR will be < 7%
         )
     )
     audits = audit_all_policies(profile, base_life_need, base_health_need, base_ad_need)
-    assert audits[0].efficiency_flag in (EfficiencyFlag.INEFFICIENT, EfficiencyFlag.MIXED)
+    assert audits[0].efficiency_flag in (
+        EfficiencyFlag.INEFFICIENT,
+        EfficiencyFlag.MIXED,
+    )
 
 
 # ---------------------------------------------------------------------------
 # audit_all_policies — list handling
 # ---------------------------------------------------------------------------
+
 
 # One result per policy in the profile
 def test_returns_one_audit_per_policy(base_life_need, base_health_need, base_ad_need):
@@ -348,13 +366,22 @@ def test_returns_one_audit_per_policy(base_life_need, base_health_need, base_ad_
 
 
 # Empty policy list → empty audit list
-def test_empty_policies_returns_empty_list(base_life_need, base_health_need, base_ad_need):
+def test_empty_policies_returns_empty_list(
+    base_life_need, base_health_need, base_ad_need
+):
     profile = UserProfile(
-        age=35, gender=Gender.MALE, city_tier=CityTier.TIER_1,
-        annual_income=18_00_000, monthly_expenses=40_000,
-        monthly_insurance_budget=10_000, tax_regime=TaxRegime.NEW,
+        age=35,
+        gender=Gender.MALE,
+        city_tier=CityTier.TIER_1,
+        annual_income=18_00_000,
+        monthly_expenses=40_000,
+        monthly_insurance_budget=10_000,
+        tax_regime=TaxRegime.NEW,
     )
-    assert audit_all_policies(profile, base_life_need, base_health_need, base_ad_need) == []
+    assert (
+        audit_all_policies(profile, base_life_need, base_health_need, base_ad_need)
+        == []
+    )
 
 
 # Adequacy gap is always non-negative
@@ -362,7 +389,7 @@ def test_adequacy_gap_never_negative(base_life_need, base_health_need, base_ad_n
     profile = _profile_with(
         ExistingPolicy(
             policy_type=PolicyType.TERM,
-            sum_assured=10_00_00_000,   # 10 crore — far exceeds any recommendation
+            sum_assured=10_00_00_000,  # 10 crore — far exceeds any recommendation
             annual_premium=1_00_000,
             start_year=2018,
         )

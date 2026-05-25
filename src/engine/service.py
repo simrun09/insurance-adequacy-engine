@@ -36,9 +36,11 @@ def assess(profile: UserProfile) -> AssessmentResult:
     health_need = compute_health_cover_need(profile)
     accident_disability_need = compute_accident_disability_need(profile)
 
-    audits = audit_all_policies(profile, life_need, health_need, accident_disability_need)
+    audits = audit_all_policies(
+        profile, life_need, health_need, accident_disability_need
+    )
 
-    plan = build_action_plan(life_need, health_need, accident_disability_need, audits, profile)
+    plan = build_action_plan(life_need, health_need, accident_disability_need, profile)
 
     explanation, used_llm = generate_explanation(
         profile, life_need, health_need, accident_disability_need, audits, plan

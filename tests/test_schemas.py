@@ -27,6 +27,7 @@ from engine.schemas import (
 # ENUM TESTS
 # ---------------------------------------------------------------------------
 
+
 # Gender accepts all three valid string values
 def test_gender_valid_values_accepted():
     adapter = TypeAdapter(Gender)
@@ -104,6 +105,7 @@ def test_efficiency_flag_invalid_value_raises_validation_error():
 # POSITIVE CONSTRUCTION TESTS
 # ---------------------------------------------------------------------------
 
+
 # Spouse with valid age and income constructs without error
 def test_spouse_valid_construction():
     s = Spouse(age=32, annual_income=800000)
@@ -126,13 +128,17 @@ def test_dependent_parent_valid_construction():
 
 # Loan with all fields constructs without error
 def test_loan_valid_construction():
-    loan = Loan(loan_type="home loan", outstanding_balance=4500000, remaining_tenure_years=15)
+    loan = Loan(
+        loan_type="home loan", outstanding_balance=4500000, remaining_tenure_years=15
+    )
     assert loan.outstanding_balance == 4500000
 
 
 # FutureExpense with a valid future year constructs without error
 def test_future_expense_valid_construction():
-    fe = FutureExpense(description="daughter's education", estimated_amount=2000000, target_year=2035)
+    fe = FutureExpense(
+        description="daughter's education", estimated_amount=2000000, target_year=2035
+    )
     assert fe.target_year == 2035
 
 
@@ -164,6 +170,7 @@ def test_existing_policy_endowment_valid_construction():
 # ---------------------------------------------------------------------------
 # CONSTRAINT VIOLATION TESTS
 # ---------------------------------------------------------------------------
+
 
 # Spouse age below 18 is not a valid working adult — must be rejected
 def test_spouse_age_below_minimum_rejected():
@@ -198,13 +205,19 @@ def test_dependent_parent_age_below_minimum_rejected():
 # Loan tenure above 30 years is beyond any standard Indian home loan product
 def test_loan_tenure_above_maximum_rejected():
     with pytest.raises(ValidationError):
-        Loan(loan_type="home loan", outstanding_balance=1000000, remaining_tenure_years=31)
+        Loan(
+            loan_type="home loan",
+            outstanding_balance=1000000,
+            remaining_tenure_years=31,
+        )
 
 
 # FutureExpense target year before 2025 means the expense is already past — invalid input
 def test_future_expense_target_year_below_minimum_rejected():
     with pytest.raises(ValidationError):
-        FutureExpense(description="old expense", estimated_amount=100000, target_year=2024)
+        FutureExpense(
+            description="old expense", estimated_amount=100000, target_year=2024
+        )
 
 
 # ExistingPolicy start year before 1980 is implausibly old for a living policyholder
@@ -264,6 +277,7 @@ def test_user_profile_negative_income_rejected():
 # USERPROFILE FULL TEST
 # ---------------------------------------------------------------------------
 
+
 # Complete realistic Indian profile — married, one child, dependent parent,
 # home loan, term + endowment policy, some assets — all fields must be accessible
 def test_user_profile_full_realistic_construction():
@@ -276,10 +290,24 @@ def test_user_profile_full_realistic_construction():
         monthly_insurance_budget=5000,
         tax_regime=TaxRegime.OLD,
         spouse=Spouse(age=32, annual_income=800000),
-        children=[Child(age=5, education_cost_estimate=2000000, marriage_cost_estimate=500000)],
+        children=[
+            Child(age=5, education_cost_estimate=2000000, marriage_cost_estimate=500000)
+        ],
         dependent_parents=[DependentParent(age=65, has_own_health_cover=False)],
-        loans=[Loan(loan_type="home loan", outstanding_balance=5000000, remaining_tenure_years=18)],
-        future_expenses=[FutureExpense(description="child education abroad", estimated_amount=3000000, target_year=2038)],
+        loans=[
+            Loan(
+                loan_type="home loan",
+                outstanding_balance=5000000,
+                remaining_tenure_years=18,
+            )
+        ],
+        future_expenses=[
+            FutureExpense(
+                description="child education abroad",
+                estimated_amount=3000000,
+                target_year=2038,
+            )
+        ],
         investable_assets=800000,
         epf_ppf_balance=400000,
         existing_policies=[
@@ -311,6 +339,7 @@ def test_user_profile_full_realistic_construction():
 # USERPROFILE MINIMAL TEST
 # ---------------------------------------------------------------------------
 
+
 # Single user with no family, no loans, no policies — all list defaults must be empty,
 # all optional fields must be None, asset defaults must be zero
 def test_user_profile_minimal_defaults():
@@ -336,6 +365,7 @@ def test_user_profile_minimal_defaults():
 # ---------------------------------------------------------------------------
 # OPTIONAL FIELD TESTS
 # ---------------------------------------------------------------------------
+
 
 # spouse=None must be accepted — not every user is married
 def test_user_profile_spouse_none_accepted():
@@ -369,6 +399,7 @@ def test_existing_policy_maturity_fields_none_accepted():
 # ---------------------------------------------------------------------------
 # OUTPUT MODEL TESTS
 # ---------------------------------------------------------------------------
+
 
 # LifeCoverNeed with realistic HLV/NBA numbers constructs correctly
 def test_life_cover_need_valid_construction():

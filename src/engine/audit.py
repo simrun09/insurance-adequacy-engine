@@ -8,8 +8,8 @@ to flag inefficiency against the "term + index fund" alternative.
 
 import datetime
 
-from engine import config
-from engine.schemas import (
+from . import config
+from .schemas import (
     AccidentDisabilityNeed,
     EfficiencyFlag,
     ExistingPolicy,
@@ -24,6 +24,7 @@ from engine.schemas import (
 # ──────────────────────────────────────────────
 # 1. IRR computation
 # ──────────────────────────────────────────────
+
 
 def _npv(r: float, annual_premium: float, years: int, maturity_value: float) -> float:
     """NPV of policy cash flows at rate r. Equals zero at the IRR.
@@ -72,6 +73,7 @@ def compute_irr(
 # 2. Opportunity cost
 # ──────────────────────────────────────────────
 
+
 def compute_opportunity_cost(
     annual_premium: float,
     years: int,
@@ -109,6 +111,7 @@ def compute_opportunity_cost(
 # ──────────────────────────────────────────────
 # 3. Private audit helpers
 # ──────────────────────────────────────────────
+
 
 def _efficiency_flag(irr: float) -> EfficiencyFlag:
     if irr >= config.IRR_THRESHOLD_EFFICIENT:
@@ -186,7 +189,9 @@ def _audit_one(
             total_years = policy.maturity_year - policy.start_year
             remaining_years = policy.maturity_year - current_year
 
-            implied_irr = compute_irr(policy.annual_premium, total_years, policy.maturity_value)
+            implied_irr = compute_irr(
+                policy.annual_premium, total_years, policy.maturity_value
+            )
 
             if implied_irr is not None:
                 efficiency_flag = _efficiency_flag(implied_irr)
@@ -214,6 +219,7 @@ def _audit_one(
 # 4. Public audit functions
 # ──────────────────────────────────────────────
 
+
 def audit_single_policy(
     policy: ExistingPolicy,
     profile: UserProfile,
@@ -224,7 +230,7 @@ def audit_single_policy(
     Use audit_all_policies when adequacy needs are already computed by service.py;
     this function recomputes them, which is redundant in that flow.
     """
-    from engine.adequacy import (
+    from .adequacy import (
         compute_accident_disability_need,
         compute_health_cover_need,
         recommend_life_cover,
@@ -235,7 +241,9 @@ def audit_single_policy(
     ad_need = compute_accident_disability_need(profile)
     current_year = datetime.date.today().year
 
-    recommended_cover = _recommended_cover_for(policy.policy_type, life_need, health_need, ad_need)
+    recommended_cover = _recommended_cover_for(
+        policy.policy_type, life_need, health_need, ad_need
+    )
     return _audit_one(policy, recommended_cover, current_year)
 
 

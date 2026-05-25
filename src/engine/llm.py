@@ -10,7 +10,7 @@ import os
 
 from dotenv import load_dotenv
 
-from engine.schemas import (
+from .schemas import (
     AccidentDisabilityNeed,
     ActionPlan,
     EfficiencyFlag,
@@ -25,7 +25,7 @@ load_dotenv()
 
 _MODEL = "claude-haiku-4-5-20251001"
 _MAX_TOKENS = 1024
-_DISCLAIMER = (
+DISCLAIMER = (
     "This assessment is for educational purposes only and does not constitute "
     "financial advice. Consult a SEBI-registered investment adviser or "
     "IRDAI-licensed insurance adviser before making any insurance decisions."
@@ -35,6 +35,7 @@ _DISCLAIMER = (
 # ──────────────────────────────────────────────
 # Private helpers
 # ──────────────────────────────────────────────
+
 
 def _fmt(amount: float) -> str:
     """Format a rupee amount in readable Indian units (lakh / crore)."""
@@ -77,6 +78,7 @@ def _biggest_gap(
 # 1. API key loading
 # ──────────────────────────────────────────────
 
+
 def _load_api_key() -> str | None:
     """
     Return the Anthropic API key from the environment, or None if absent.
@@ -90,6 +92,7 @@ def _load_api_key() -> str | None:
 # ──────────────────────────────────────────────
 # 2. Prompt construction
 # ──────────────────────────────────────────────
+
 
 def _build_prompt(
     profile: UserProfile,
@@ -112,7 +115,8 @@ def _build_prompt(
     urgent = _biggest_gap(life_need, health_need, accident_disability_need)
 
     investment_audits = [
-        a for a in policy_audits
+        a
+        for a in policy_audits
         if a.policy_type in (PolicyType.ULIP, PolicyType.ENDOWMENT)
         and a.efficiency_flag is not None
     ]
@@ -138,7 +142,9 @@ Accident cover — Recommended: {_fmt(accident_disability_need.recommended_accid
                 f"({a.efficiency_flag.value})"
             )
             if a.opportunity_cost and a.opportunity_cost > 0:
-                prompt += f", opportunity cost vs term+index fund: {_fmt(a.opportunity_cost)}"
+                prompt += (
+                    f", opportunity cost vs term+index fund: {_fmt(a.opportunity_cost)}"
+                )
             prompt += "\n"
 
     within = action_plan.items_within_budget
@@ -156,7 +162,9 @@ Accident cover — Recommended: {_fmt(accident_disability_need.recommended_accid
         prompt += "\nACTION PLAN — beyond current budget:\n"
         for item in beyond:
             prompt += f"- {item.policy_type.value.title()} cover {_fmt(item.recommended_cover)}\n"
-        prompt += f"Additional monthly budget needed: {_fmt(action_plan.monthly_shortfall)}\n"
+        prompt += (
+            f"Additional monthly budget needed: {_fmt(action_plan.monthly_shortfall)}\n"
+        )
 
     prompt += f"""
 RULES — follow exactly:
@@ -167,7 +175,7 @@ RULES — follow exactly:
 5. Under 300 words
 6. Write in second person ("you", "your family")
 7. End with this exact disclaimer:
-   "{_DISCLAIMER}"
+   "{DISCLAIMER}"
 
 Write the explanation now."""
 
@@ -177,6 +185,7 @@ Write the explanation now."""
 # ──────────────────────────────────────────────
 # 3. LLM call
 # ──────────────────────────────────────────────
+
 
 def _call_llm(prompt: str, api_key: str) -> str | None:
     """
@@ -189,6 +198,7 @@ def _call_llm(prompt: str, api_key: str) -> str | None:
     """
     try:
         import anthropic
+
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
             model=_MODEL,
@@ -204,6 +214,7 @@ def _call_llm(prompt: str, api_key: str) -> str | None:
 # ──────────────────────────────────────────────
 # 4. Template explanation
 # ──────────────────────────────────────────────
+
 
 def _generate_template_explanation(
     profile: UserProfile,
@@ -291,7 +302,8 @@ def _generate_template_explanation(
 
     # Policy audit findings
     investment_audits = [
-        a for a in policy_audits
+        a
+        for a in policy_audits
         if a.policy_type in (PolicyType.ULIP, PolicyType.ENDOWMENT)
         and a.efficiency_flag is not None
     ]
@@ -362,7 +374,7 @@ def _generate_template_explanation(
     lines.append("")
 
     # Disclaimer
-    lines.append(_DISCLAIMER)
+    lines.append(DISCLAIMER)
 
     return "\n".join(lines)
 
@@ -370,6 +382,7 @@ def _generate_template_explanation(
 # ──────────────────────────────────────────────
 # 5. Public function
 # ──────────────────────────────────────────────
+
 
 def generate_explanation(
     profile: UserProfile,
@@ -393,15 +406,23 @@ def generate_explanation(
     api_key = _load_api_key()
     if api_key:
         prompt = _build_prompt(
-            profile, life_need, health_need,
-            accident_disability_need, policy_audits, action_plan,
+            profile,
+            life_need,
+            health_need,
+            accident_disability_need,
+            policy_audits,
+            action_plan,
         )
         result = _call_llm(prompt, api_key)
         if result:
             return result, True
 
     fallback = _generate_template_explanation(
-        profile, life_need, health_need,
-        accident_disability_need, policy_audits, action_plan,
+        profile,
+        life_need,
+        health_need,
+        accident_disability_need,
+        policy_audits,
+        action_plan,
     )
     return fallback, False

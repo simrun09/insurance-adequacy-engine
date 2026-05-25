@@ -70,6 +70,7 @@ _EFF_ICON = {"efficient": "✅", "mixed": "⚠️", "inefficient": "❌"}
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+
 def fmt_inr(amount: float) -> str:
     """Format a rupee amount in Indian notation (lakhs / crores)."""
     if amount >= 1_00_00_000:
@@ -193,7 +194,11 @@ with st.sidebar:
             c1, c2, c3, c4 = st.columns([1, 2, 2, 1])
             with c1:
                 child["age"] = st.number_input(
-                    "Age", min_value=0, max_value=25, value=child["age"], key=f"ch_age_{i}"
+                    "Age",
+                    min_value=0,
+                    max_value=25,
+                    value=child["age"],
+                    key=f"ch_age_{i}",
                 )
             with c2:
                 child["edu"] = st.number_input(
@@ -222,7 +227,9 @@ with st.sidebar:
             st.rerun()
 
     # ── Expander: dependent parents ───────────────────────────────────────────
-    with st.expander(f"Add dependent parents  ·  {len(st.session_state.parents)} added"):
+    with st.expander(
+        f"Add dependent parents  ·  {len(st.session_state.parents)} added"
+    ):
         if st.button("＋ Add a parent", key="add_parent_btn"):
             st.session_state.parents.append({"age": 62, "own_cover": False})
             st.rerun()
@@ -233,7 +240,11 @@ with st.sidebar:
             c1, c2, c3 = st.columns([2, 3, 1])
             with c1:
                 parent["age"] = st.number_input(
-                    "Age", min_value=40, max_value=100, value=parent["age"], key=f"par_age_{i}"
+                    "Age",
+                    min_value=40,
+                    max_value=100,
+                    value=parent["age"],
+                    key=f"par_age_{i}",
                 )
             with c2:
                 parent["own_cover"] = st.checkbox(
@@ -254,7 +265,9 @@ with st.sidebar:
     # ── Expander: loans ───────────────────────────────────────────────────────
     with st.expander(f"Add loans  ·  {len(st.session_state.loans)} added"):
         if st.button("＋ Add a loan", key="add_loan_btn"):
-            st.session_state.loans.append({"type": "Home Loan", "balance": 0, "tenure": 10})
+            st.session_state.loans.append(
+                {"type": "Home Loan", "balance": 0, "tenure": 10}
+            )
             st.rerun()
 
         to_remove = None
@@ -293,7 +306,9 @@ with st.sidebar:
             st.rerun()
 
     # ── Expander: existing policies ───────────────────────────────────────────
-    with st.expander(f"Add existing policies  ·  {len(st.session_state.policies)} added"):
+    with st.expander(
+        f"Add existing policies  ·  {len(st.session_state.policies)} added"
+    ):
         if st.button("＋ Add a policy", key="add_pol_btn"):
             st.session_state.policies.append(
                 {
@@ -503,8 +518,12 @@ elif st.session_state.get("result") is None:
         "**🔍 Analyze My Protection** to get started."
     )
     c1, c2, c3, c4 = st.columns(4)
-    c1.markdown("### 📊\nCoverage gap analysis across life, health, accident, and disability")
-    c2.markdown("### 🔍\nAudit of your existing policies — including ULIP / endowment traps")
+    c1.markdown(
+        "### 📊\nCoverage gap analysis across life, health, accident, and disability"
+    )
+    c2.markdown(
+        "### 🔍\nAudit of your existing policies — including ULIP / endowment traps"
+    )
     c3.markdown("### 📋\nPrioritized action plan that fits your monthly budget")
     c4.markdown("### 💬\nPlain-English explanation — no jargon, no upselling")
 
@@ -547,7 +566,9 @@ else:
     acc = result["accident_disability_need"]
 
     _gap_row("Life", life["existing_cover"], life["recommended_cover"], life["gap"])
-    _gap_row("Health", health["existing_cover"], health["recommended_cover"], health["gap"])
+    _gap_row(
+        "Health", health["existing_cover"], health["recommended_cover"], health["gap"]
+    )
     _gap_row(
         "Accident",
         acc["existing_accident_cover"],
@@ -588,11 +609,15 @@ else:
     audits: list = result.get("policy_audits", [])
     if audits:
         st.header("🔍 Your Existing Policies")
-        st.caption("We've checked whether each policy gives you adequate cover, "
-                   "and — for investment-linked ones — whether it's earning a fair return.")
+        st.caption(
+            "We've checked whether each policy gives you adequate cover, "
+            "and — for investment-linked ones — whether it's earning a fair return."
+        )
 
         for audit in audits:
-            pol_label = _POLICY_DISPLAY.get(audit["policy_type"], audit["policy_type"].title())
+            pol_label = _POLICY_DISPLAY.get(
+                audit["policy_type"], audit["policy_type"].title()
+            )
             eff = audit.get("efficiency_flag")
             eff_icon = _EFF_ICON.get(eff, "")
             adequacy_icon = "✅" if audit["is_adequate"] else "⚠️"
@@ -612,7 +637,9 @@ else:
                     if audit.get("implied_irr") is not None:
                         irr: float = audit["implied_irr"]
                         opp: float = audit.get("opportunity_cost") or 0.0
-                        irr_color = "green" if irr >= 8 else ("orange" if irr >= 5 else "red")
+                        irr_color = (
+                            "green" if irr >= 8 else ("orange" if irr >= 5 else "red")
+                        )
                         st.caption(
                             f"Implied return: :{irr_color}[**{irr:.1f}% per year**]  ·  "
                             f"What you're giving up vs term + index fund: "
@@ -635,8 +662,12 @@ else:
                 c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
                 c1.markdown(f"**{item['priority_rank']}. {label}**")
                 c2.metric("Cover", fmt_inr(item["recommended_cover"]))
-                c3.metric("~Monthly premium", fmt_inr(item["estimated_monthly_premium"]))
-                c4.metric("Budget left after", fmt_inr(max(item["remaining_budget"], 0)))
+                c3.metric(
+                    "~Monthly premium", fmt_inr(item["estimated_monthly_premium"])
+                )
+                c4.metric(
+                    "Budget left after", fmt_inr(max(item["remaining_budget"], 0))
+                )
 
     if beyond:
         st.subheader("⛔ Beyond your current budget")
@@ -650,10 +681,14 @@ else:
                 c1, c2, c3 = st.columns([3, 2, 2])
                 c1.markdown(f"**{item['priority_rank']}. {label}**")
                 c2.metric("Cover needed", fmt_inr(item["recommended_cover"]))
-                c3.metric("~Monthly premium", fmt_inr(item["estimated_monthly_premium"]))
+                c3.metric(
+                    "~Monthly premium", fmt_inr(item["estimated_monthly_premium"])
+                )
 
     if not within and not beyond:
-        st.success("🎉 No coverage gaps detected. Your existing policies appear adequate.")
+        st.success(
+            "🎉 No coverage gaps detected. Your existing policies appear adequate."
+        )
     elif plan["monthly_shortfall"] > 0:
         st.warning(
             f"To close **all** gaps you need an additional "

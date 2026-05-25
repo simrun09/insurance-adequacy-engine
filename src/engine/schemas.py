@@ -113,7 +113,9 @@ class UserProfile(BaseModel):
 
 class LifeCoverNeed(BaseModel):
     # Stored separately for traceability — user can see which method drove the recommendation
-    hlv_based_cover: float  # present value of income family would lose (income replacement)
+    hlv_based_cover: (
+        float  # present value of income family would lose (income replacement)
+    )
     nba_based_cover: float  # sum of obligations minus existing assets (needs-based)
     recommended_cover: float  # max(hlv_based_cover, nba_based_cover)
     existing_cover: float
@@ -129,11 +131,13 @@ class HealthCoverNeed(BaseModel):
     # Stored separately so the user can see exactly how the recommendation was built
     city_tier_floor: float
     family_size_adjustment: float  # 5 lakh per additional family member
-    age_adjustment: float          # 20% buffer added if user age > 45
+    age_adjustment: float  # 20% buffer added if user age > 45
 
 
 class AccidentDisabilityNeed(BaseModel):
-    recommended_accident_cover: float   # 10x monthly income (lump sum on death/disability)
+    recommended_accident_cover: (
+        float  # 10x monthly income (lump sum on death/disability)
+    )
     existing_accident_cover: float
     accident_gap: float
     recommended_disability_cover: float  # 50-60% of annual income (income replacement)
@@ -189,12 +193,24 @@ class AssessmentResult(BaseModel):
     disclaimer: str
 
 
-
-
 __all__ = [
-    "Gender", "CityTier", "TaxRegime", "PolicyType", "EfficiencyFlag",
-    "Spouse", "Child", "DependentParent", "Loan", "FutureExpense",
-    "ExistingPolicy", "UserProfile",
-    "LifeCoverNeed", "HealthCoverNeed", "AccidentDisabilityNeed",
-    "PolicyAudit", "ActionItem", "ActionPlan", "AssessmentResult",
+    "Gender",
+    "CityTier",
+    "TaxRegime",
+    "PolicyType",
+    "EfficiencyFlag",
+    "Spouse",
+    "Child",
+    "DependentParent",
+    "Loan",
+    "FutureExpense",
+    "ExistingPolicy",
+    "UserProfile",
+    "LifeCoverNeed",
+    "HealthCoverNeed",
+    "AccidentDisabilityNeed",
+    "PolicyAudit",
+    "ActionItem",
+    "ActionPlan",
+    "AssessmentResult",
 ]

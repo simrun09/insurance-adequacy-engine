@@ -7,14 +7,13 @@ All tunable values (premium rates, thresholds) come from config — no magic
 numbers here.
 """
 
-from engine import config
-from engine.schemas import (
+from . import config
+from .schemas import (
     AccidentDisabilityNeed,
     ActionItem,
     ActionPlan,
     HealthCoverNeed,
     LifeCoverNeed,
-    PolicyAudit,
     PolicyType,
     UserProfile,
 )
@@ -68,7 +67,6 @@ def build_action_plan(
     life_need: LifeCoverNeed,
     health_need: HealthCoverNeed,
     accident_disability_need: AccidentDisabilityNeed,
-    policy_audits: list[PolicyAudit],
     profile: UserProfile,
 ) -> ActionPlan:
     """
@@ -83,9 +81,6 @@ def build_action_plan(
       b. No dependents (no spouse, children, or dependent parents) → term
          drops to last. Rationale: term cover protects dependents; without
          any, the urgency is lower.
-
-    policy_audits is accepted for use by the explanation layer (llm.py) —
-    the prioritiser itself derives gaps from the need objects, not audits.
     """
     gaps = {
         PolicyType.TERM: life_need.gap,

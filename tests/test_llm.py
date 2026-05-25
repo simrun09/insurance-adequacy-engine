@@ -17,7 +17,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from engine.llm import _build_prompt, _generate_template_explanation, generate_explanation
+from engine.llm import (
+    _build_prompt,
+    _generate_template_explanation,
+    generate_explanation,
+)
 from engine.schemas import (
     AccidentDisabilityNeed,
     ActionItem,
@@ -39,6 +43,7 @@ from engine.schemas import (
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture
 def profile():
@@ -132,6 +137,7 @@ def action_plan_with_beyond(action_plan_within_budget, health_need):
 # generate_explanation — LLM path (mocked)
 # ---------------------------------------------------------------------------
 
+
 def test_generate_explanation_returns_llm_text_when_api_key_present(
     profile, life_need, health_need, accident_need, action_plan_within_budget
 ):
@@ -142,7 +148,12 @@ def test_generate_explanation_returns_llm_text_when_api_key_present(
         with patch("anthropic.Anthropic") as mock_client_cls:
             mock_client_cls.return_value.messages.create.return_value = mock_message
             text, used_llm = generate_explanation(
-                profile, life_need, health_need, accident_need, [], action_plan_within_budget
+                profile,
+                life_need,
+                health_need,
+                accident_need,
+                [],
+                action_plan_within_budget,
             )
 
     assert used_llm is True
@@ -156,7 +167,12 @@ def test_generate_explanation_used_llm_flag_is_false_on_template_path(
     with patch.dict(os.environ, {}, clear=True):
         os.environ.pop("ANTHROPIC_API_KEY", None)
         text, used_llm = generate_explanation(
-            profile, life_need, health_need, accident_need, [], action_plan_within_budget
+            profile,
+            life_need,
+            health_need,
+            accident_need,
+            [],
+            action_plan_within_budget,
         )
     assert used_llm is False
     assert isinstance(text, str)
@@ -167,6 +183,7 @@ def test_generate_explanation_used_llm_flag_is_false_on_template_path(
 # generate_explanation — fallback paths
 # ---------------------------------------------------------------------------
 
+
 # No API key → template path, used_llm=False
 def test_generate_explanation_falls_back_when_no_api_key(
     profile, life_need, health_need, accident_need, action_plan_within_budget
@@ -174,7 +191,12 @@ def test_generate_explanation_falls_back_when_no_api_key(
     env_without_key = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     with patch.dict(os.environ, env_without_key, clear=True):
         text, used_llm = generate_explanation(
-            profile, life_need, health_need, accident_need, [], action_plan_within_budget
+            profile,
+            life_need,
+            health_need,
+            accident_need,
+            [],
+            action_plan_within_budget,
         )
     assert used_llm is False
     assert isinstance(text, str)
@@ -186,9 +208,16 @@ def test_generate_explanation_falls_back_on_llm_exception(
 ):
     with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "sk-test-key"}):
         with patch("anthropic.Anthropic") as mock_client_cls:
-            mock_client_cls.return_value.messages.create.side_effect = RuntimeError("network error")
+            mock_client_cls.return_value.messages.create.side_effect = RuntimeError(
+                "network error"
+            )
             text, used_llm = generate_explanation(
-                profile, life_need, health_need, accident_need, [], action_plan_within_budget
+                profile,
+                life_need,
+                health_need,
+                accident_need,
+                [],
+                action_plan_within_budget,
             )
     assert used_llm is False
     assert isinstance(text, str)
@@ -205,7 +234,12 @@ def test_generate_explanation_falls_back_when_llm_returns_empty_string(
         with patch("anthropic.Anthropic") as mock_client_cls:
             mock_client_cls.return_value.messages.create.return_value = mock_message
             text, used_llm = generate_explanation(
-                profile, life_need, health_need, accident_need, [], action_plan_within_budget
+                profile,
+                life_need,
+                health_need,
+                accident_need,
+                [],
+                action_plan_within_budget,
             )
     assert used_llm is False
 
@@ -213,6 +247,7 @@ def test_generate_explanation_falls_back_when_llm_returns_empty_string(
 # ---------------------------------------------------------------------------
 # _generate_template_explanation — structure and content
 # ---------------------------------------------------------------------------
+
 
 def test_template_contains_all_three_coverage_sections(
     profile, life_need, health_need, accident_need, action_plan_within_budget
@@ -257,24 +292,35 @@ def test_template_includes_action_plan_section(
 # Zero gaps → "no action needed" language, no gap amounts
 def test_template_handles_zero_gaps(profile, action_plan_within_budget):
     life_adequate = LifeCoverNeed(
-        hlv_based_cover=2_00_00_000, nba_based_cover=1_50_00_000,
-        recommended_cover=2_00_00_000, existing_cover=2_00_00_000,
-        gap=0, heuristic_10x_cover=1_80_00_000,
+        hlv_based_cover=2_00_00_000,
+        nba_based_cover=1_50_00_000,
+        recommended_cover=2_00_00_000,
+        existing_cover=2_00_00_000,
+        gap=0,
+        heuristic_10x_cover=1_80_00_000,
     )
     health_adequate = HealthCoverNeed(
-        recommended_cover=25_00_000, existing_cover=25_00_000,
-        gap=0, city_tier_floor=25_00_000,
-        family_size_adjustment=0, age_adjustment=0,
+        recommended_cover=25_00_000,
+        existing_cover=25_00_000,
+        gap=0,
+        city_tier_floor=25_00_000,
+        family_size_adjustment=0,
+        age_adjustment=0,
     )
     accident_adequate = AccidentDisabilityNeed(
-        recommended_accident_cover=15_00_000, existing_accident_cover=15_00_000,
+        recommended_accident_cover=15_00_000,
+        existing_accident_cover=15_00_000,
         accident_gap=0,
-        recommended_disability_cover=9_00_000, existing_disability_cover=9_00_000,
-        disability_gap=0, disability_via_rider_suggested=True,
+        recommended_disability_cover=9_00_000,
+        existing_disability_cover=9_00_000,
+        disability_gap=0,
+        disability_via_rider_suggested=True,
     )
     empty_plan = ActionPlan(
-        items_within_budget=[], items_beyond_budget=[],
-        total_monthly_premium_required=0.0, monthly_shortfall=0.0,
+        items_within_budget=[],
+        items_beyond_budget=[],
+        total_monthly_premium_required=0.0,
+        monthly_shortfall=0.0,
     )
     text = _generate_template_explanation(
         profile, life_adequate, health_adequate, accident_adequate, [], empty_plan
@@ -309,8 +355,12 @@ def test_template_shows_policy_review_section_for_inefficient_ulip(
         recommendation="Implied IRR of 4.5% is below 7% — lags a term + index fund alternative.",
     )
     text = _generate_template_explanation(
-        profile, life_need, health_need, accident_need,
-        [inefficient_audit], action_plan_within_budget
+        profile,
+        life_need,
+        health_need,
+        accident_need,
+        [inefficient_audit],
+        action_plan_within_budget,
     )
     assert "EXISTING POLICY REVIEW" in text
     assert "4.5%" in text
@@ -331,8 +381,12 @@ def test_template_omits_policy_review_when_no_investment_policies(
         recommendation="Coverage gap.",
     )
     text = _generate_template_explanation(
-        profile, life_need, health_need, accident_need,
-        [term_audit], action_plan_within_budget
+        profile,
+        life_need,
+        health_need,
+        accident_need,
+        [term_audit],
+        action_plan_within_budget,
     )
     assert "EXISTING POLICY REVIEW" not in text
 
@@ -341,15 +395,16 @@ def test_template_omits_policy_review_when_no_investment_policies(
 # _build_prompt — content checks
 # ---------------------------------------------------------------------------
 
+
 def test_build_prompt_contains_user_situation_numbers(
     profile, life_need, health_need, accident_need, action_plan_within_budget
 ):
     prompt = _build_prompt(
         profile, life_need, health_need, accident_need, [], action_plan_within_budget
     )
-    assert "18" in prompt          # age
-    assert "TIER-1" in prompt      # city tier
-    assert "1.5 crore" in prompt   # life gap
+    assert "18" in prompt  # age
+    assert "TIER-1" in prompt  # city tier
+    assert "1.5 crore" in prompt  # life gap
 
 
 def test_build_prompt_contains_role_definition(
@@ -368,7 +423,11 @@ def test_build_prompt_contains_hard_constraints(
         profile, life_need, health_need, accident_need, [], action_plan_within_budget
     )
     # Must tell LLM not to recommend specific products and not to contradict numbers
-    assert "Never name specific" in prompt or "Never recommend" in prompt or "never" in prompt.lower()
+    assert (
+        "Never name specific" in prompt
+        or "Never recommend" in prompt
+        or "never" in prompt.lower()
+    )
     assert "300 words" in prompt
 
 

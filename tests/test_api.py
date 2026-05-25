@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 
 from engine.api import app
@@ -20,16 +19,34 @@ FULL_PROFILE = {
     "tax_regime": "old",
     "spouse": {"age": 32, "annual_income": 0},
     "children": [
-        {"age": 4, "education_cost_estimate": 2500000, "marriage_cost_estimate": 1500000}
+        {
+            "age": 4,
+            "education_cost_estimate": 2500000,
+            "marriage_cost_estimate": 1500000,
+        }
     ],
     "dependent_parents": [{"age": 64, "has_own_health_cover": False}],
     "loans": [
-        {"loan_type": "home loan", "outstanding_balance": 6000000, "remaining_tenure_years": 20}
+        {
+            "loan_type": "home loan",
+            "outstanding_balance": 6000000,
+            "remaining_tenure_years": 20,
+        }
     ],
     "future_expenses": [],
     "existing_policies": [
-        {"policy_type": "term", "sum_assured": 10000000, "annual_premium": 12000, "start_year": 2021},
-        {"policy_type": "health", "sum_assured": 500000, "annual_premium": 15000, "start_year": 2022},
+        {
+            "policy_type": "term",
+            "sum_assured": 10000000,
+            "annual_premium": 12000,
+            "start_year": 2021,
+        },
+        {
+            "policy_type": "health",
+            "sum_assured": 500000,
+            "annual_premium": 15000,
+            "start_year": 2022,
+        },
     ],
     "investable_assets": 800000,
     "epf_ppf_balance": 1200000,
@@ -51,6 +68,7 @@ MINIMAL_PROFILE = {
 # 1. Health endpoint
 # ---------------------------------------------------------------------------
 
+
 def test_health_returns_200_and_status():
     # Verifies the liveness check is reachable and returns the expected shape.
     # Load balancers and deployment tools depend on this endpoint.
@@ -62,6 +80,7 @@ def test_health_returns_200_and_status():
 # ---------------------------------------------------------------------------
 # 2. Full profile — all expected fields present in response
 # ---------------------------------------------------------------------------
+
 
 def test_assess_full_profile_returns_200_with_all_fields():
     # Verifies the complete pipeline runs end-to-end and the response
@@ -108,6 +127,7 @@ def test_assess_full_profile_numbers_are_sensible():
 # 3. Minimal profile — single person, no optional fields
 # ---------------------------------------------------------------------------
 
+
 def test_assess_minimal_profile_returns_200():
     # Verifies the endpoint handles the simplest valid input correctly.
     # All optional fields (spouse, children, loans, policies) are omitted —
@@ -125,6 +145,7 @@ def test_assess_minimal_profile_returns_200():
 # 4. Invalid input — age below minimum
 # ---------------------------------------------------------------------------
 
+
 def test_assess_invalid_age_returns_422():
     # Verifies that Pydantic validation rejects out-of-range values before
     # the endpoint body executes. FastAPI handles this automatically via
@@ -141,6 +162,7 @@ def test_assess_invalid_age_returns_422():
 # ---------------------------------------------------------------------------
 # 5. Missing required fields
 # ---------------------------------------------------------------------------
+
 
 def test_assess_missing_required_fields_returns_422():
     # Verifies that an empty body is rejected with a 422, not a 500.

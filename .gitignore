@@ -39,3 +39,7 @@ logs/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Working / session files
+dev-notes/
+*.html

@@ -36,13 +36,13 @@ EMERGENCY_MONTHS = 6
 # cancer/cardiac/transplant = 15-25 lakh.
 # Source: Niva Bupa, Ditto, ManipalCigna insurer publications.
 
-HEALTH_FLOOR_TIER_1 = 10_00_000    # 10 lakh minimum
+HEALTH_FLOOR_TIER_1 = 10_00_000  # 10 lakh minimum
 HEALTH_RECOMMENDED_TIER_1 = 25_00_000  # 25 lakh recommended
 
-HEALTH_FLOOR_TIER_2 = 10_00_000    # 10 lakh
+HEALTH_FLOOR_TIER_2 = 10_00_000  # 10 lakh
 HEALTH_RECOMMENDED_TIER_2 = 10_00_000
 
-HEALTH_FLOOR_TIER_3 = 5_00_000     # 5 lakh minimum
+HEALTH_FLOOR_TIER_3 = 5_00_000  # 5 lakh minimum
 HEALTH_RECOMMENDED_TIER_3 = 10_00_000  # 10 lakh recommended
 
 # Per additional family member added to floater.
@@ -93,10 +93,10 @@ SECTION_80D_PARENTS_SENIOR_LIMIT = 50_000  # parents 60 and above
 # Source: Income Tax Act Schedule.
 
 OLD_REGIME_SLABS = [
-    (2_50_000, 0.00),     # up to 2.5 lakh: nil
-    (5_00_000, 0.05),     # 2.5-5 lakh: 5%
-    (10_00_000, 0.20),    # 5-10 lakh: 20%
-    (float("inf"), 0.30), # above 10 lakh: 30%
+    (2_50_000, 0.00),  # up to 2.5 lakh: nil
+    (5_00_000, 0.05),  # 2.5-5 lakh: 5%
+    (10_00_000, 0.20),  # 5-10 lakh: 20%
+    (float("inf"), 0.30),  # above 10 lakh: 30%
 ]
 
 # ──────────────────────────────────────────────
@@ -109,9 +109,31 @@ OLD_REGIME_SLABS = [
 
 TERM_PREMIUM_PER_LAKH_ANNUAL = 10  # ~₹10/lakh/year for age 30-35
 HEALTH_PREMIUM_ANNUAL_APPROX = {
-    "individual_young": 8_000,   # age < 35, individual
-    "individual_mid": 15_000,    # age 35-45, individual
-    "individual_senior": 25_000, # age > 45, individual
-    "family_floater": 20_000,    # family of 3-4, primary < 40
+    "individual_young": 8_000,  # age < 35, individual
+    "individual_mid": 15_000,  # age 35-45, individual
+    "individual_senior": 25_000,  # age > 45, individual
+    "family_floater": 20_000,  # family of 3-4, primary < 40
 }
 ACCIDENT_PREMIUM_ANNUAL_APPROX = 3_000  # per 10 lakh cover
+
+# ──────────────────────────────────────────────
+# Policy audit — IRR thresholds and benchmark
+# ──────────────────────────────────────────────
+# IRR thresholds for classifying ULIP/endowment efficiency.
+# Source: Nifty 50 long-run CAGR ~12%; debt funds ~7-8%.
+# Anything below 5% loses to a savings account (RBI repo ~6.5%).
+
+# Nifty 50 long-run CAGR is ~11% nominal (source: NSE historical returns).
+# Using 11% (not 12%) as a conservative estimate for opportunity cost comparison.
+INDEX_FUND_RETURN_RATE = 0.11
+
+# Flat term premium estimate used in opportunity cost calculation only.
+# Rough market average for ₹1 crore cover, age 30–35 (PolicyBazaar / Ditto).
+TERM_PREMIUM_ANNUAL_ESTIMATE = 12_000
+
+# IRR verdict thresholds for ULIP/endowment policies.
+# < 7%: inefficient (loses to debt funds ~7-8%)
+# 7-9%: mixed (mediocre — near debt fund returns, well below equity)
+# >= 9%: efficient (approaching balanced fund returns)
+IRR_THRESHOLD_EFFICIENT = 0.09
+IRR_THRESHOLD_MIXED = 0.07
