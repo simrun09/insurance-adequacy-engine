@@ -19,26 +19,32 @@ Insurance Adequacy Engine — a budget-constrained, existing-policy-aware insura
 - No code without a stated requirement in the spec
 - Every architectural decision must be defensible ("why this, not that")
 
-## Project Structure (target)
+## Project Structure
 insurance-adequacy-engine/
   CLAUDE.md
   README.md
   .gitignore
-  .env.example          # template for environment variables (no real secrets)
+  .env.example           # template for environment variables (no real secrets)
   pyproject.toml         # project metadata and dependencies
   specs/                 # specifications, plans, tasks
   src/
     engine/
       __init__.py
-      schemas.py         # Pydantic input/output models
+      schemas.py         # Pydantic input/output models — all domain types
+      config.py          # all tunable constants (rates, thresholds, premium estimates)
       adequacy.py        # HLV, NBA, health, accident, disability scorers
+      tax.py             # tax regime helpers (effective premium cost)
       audit.py           # existing policy audit (ULIP/endowment trap detection)
       prioritizer.py     # budget-constrained gap closure sequencing
       llm.py             # LLM integration + template fallback
+      service.py         # orchestrates full pipeline; only file that imports everything
       api.py             # FastAPI app and endpoints
-  tests/                 # pytest tests mirroring src/ structure
+  tests/                 # pytest tests mirroring src/ structure (166 tests)
   dashboard/
-    app.py               # Streamlit dashboard
+    app.py               # Streamlit dashboard — calls API over HTTP
+  docs/
+    _config.yml          # Jekyll config (Cayman theme)
+    index.md             # GitHub Pages landing page
   data/
     products.json        # simulated insurance product catalog
 
@@ -60,6 +66,26 @@ insurance-adequacy-engine/
 - LLM generates explanations only — never influences the numbers
 - Template fallback must always exist for every LLM-generated output
 
+## Running locally
+
+```bash
+# API server (terminal 1)
+uv run uvicorn src.engine.api:app --port 8000
+
+# Dashboard (terminal 2)
+uv run streamlit run dashboard/app.py
+
+# Tests
+uv run pytest --tb=short -q
+
+# Lint + format
+uv run ruff check src/ tests/ dashboard/
+uv run ruff format src/ tests/ dashboard/
+```
+
+All imports are relative (from . import ...) — never use absolute engine.* imports.
+Run uvicorn as `src.engine.api:app` from the project root with `uv run`.
+
 ## Current State
 - [x] Day 1: Project setup, git, CLAUDE.md, initial spec
 - [x] Day 2: Pydantic schemas (input/output models)
@@ -67,4 +93,7 @@ insurance-adequacy-engine/
 - [x] Day 4: Policy audit + budget-constrained prioritizer
 - [x] Day 5: LLM layer + graceful degradation
 - [x] Day 6: FastAPI endpoints
-- [ ] Day 7: Streamlit dashboard + README polish
+- [x] Day 7: Streamlit dashboard + README polish + GitHub Pages
+
+Project is complete. 166 tests pass. Deployed to GitHub Pages at
+https://simrun09.github.io/insurance-adequacy-engine/
