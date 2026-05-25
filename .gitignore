@@ -43,3 +43,4 @@ logs/
 # Working / session files
 dev-notes/
 *.html
+!docs/**/*.html

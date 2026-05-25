@@ -1,0 +1,6 @@
+title: Insurance Adequacy Engine
+description: A budget-constrained, existing-policy-aware insurance adequacy assessment engine for the Indian market.
+theme: cayman
+show_downloads: true
+github:
+  repository_url: https://github.com/simrun09/insurance-adequacy-engine
