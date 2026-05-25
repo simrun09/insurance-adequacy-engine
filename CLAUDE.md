@@ -56,6 +56,7 @@ insurance-adequacy-engine/
 - Config values (discount rates, city tier thresholds, etc.) live in a config file or constants module, not hardcoded in logic
 - Secrets (.env) never committed — use .env.example as a template
 - Commit messages: imperative tense, descriptive ("Add HLV scorer with IRDAI discount rate" not "updated stuff")
+- Never add Co-Authored-By or any Claude/AI attribution to commit messages
 
 ## Key Domain Rules
 - Adequacy is normative, not predictive — no ML for coverage recommendations
