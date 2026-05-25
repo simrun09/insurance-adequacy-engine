@@ -77,14 +77,14 @@ Done when: FR-8 is implemented with both LLM and template paths working.
 
 ## Day 6 — FastAPI Backend
 
-- [ ] T6.1: Implement src/engine/service.py — orchestrates the pipeline
-- [ ] T6.2: Implement src/engine/api.py — FastAPI app with /assess endpoint
-- [ ] T6.3: Wire up validation error handling (422 responses)
-- [ ] T6.4: Wire up internal error handling (500 responses)
-- [ ] T6.5: Add OpenAPI metadata (title, description, version)
-- [ ] T6.6: Write tests/test_api.py using FastAPI TestClient
-- [ ] T6.7: Manual smoke test with curl
-- [ ] T6.8: Commit and push
+- [x] T6.1: Implement src/engine/service.py — orchestrates the pipeline
+- [x] T6.2: Implement src/engine/api.py — FastAPI app with /assess endpoint
+- [x] T6.3: Wire up validation error handling (422 responses)
+- [x] T6.4: Wire up internal error handling (500 responses)
+- [x] T6.5: Add OpenAPI metadata (title, description, version)
+- [x] T6.6: Write tests/test_api.py using FastAPI TestClient
+- [x] T6.7: Manual smoke test with curl
+- [x] T6.8: Commit and push
 
 Done when: FR-9 is implemented, OpenAPI docs are accessible at /docs,
 and the endpoint returns valid AssessmentResult JSON.

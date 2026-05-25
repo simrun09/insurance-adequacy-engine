@@ -66,5 +66,5 @@ insurance-adequacy-engine/
 - [x] Day 3: Adequacy engine (HLV, NBA, health, accident, disability)
 - [x] Day 4: Policy audit + budget-constrained prioritizer
 - [x] Day 5: LLM layer + graceful degradation
-- [ ] Day 6: FastAPI endpoints
+- [x] Day 6: FastAPI endpoints
 - [ ] Day 7: Streamlit dashboard + README polish
